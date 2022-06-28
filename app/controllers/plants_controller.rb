@@ -1,0 +1,38 @@
+class PlantsController < ApplicationController
+    
+    wrap_parameters format: []
+    
+    def index
+        render json: Plant.all, status: :ok
+    end
+
+    def show
+        plant = Plant.find_by(id: params[:id])
+        if plant
+            render json: plant
+        else
+            render json: { error: "Plant not found" }, status: :not_found
+        end
+    end
+
+    def create
+        plant = Plant.create(plant_params)
+        render json: plant, status: :created
+    end 
+
+    def update
+        plant = Plant.find_by(id: params[:id])  
+        byebug
+        if plant
+            plant.update(plant_params)
+            render json: plant
+        else
+            render json: { error: "plant not found" }, status: :unprocessable_entity
+    end
+
+    private
+
+    def plant_params
+        params.permit(:name, :image, :price)
+    end
+end
